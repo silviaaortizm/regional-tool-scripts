@@ -1,0 +1,18 @@
+# Stata logs and temporary files
+*.log
+*.smcl
+*.tmp
+*.temp
+*.bak
+*.backup
+*.stswp
+ST_*.tmp
+
+# Local Stata package tracking files
+*.trk
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
