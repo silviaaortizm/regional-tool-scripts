@@ -78,23 +78,24 @@ else {
 	local Subsidies         "${Subsidies}"
 	local Indtaxes 			"${Indtaxes}"
 	local InKindTransfers	"${InKindTransfers}" 
+	local extra_subdivisions "ssc_health_5 ssc_health_6"
 		
 	local taxcs 			`Directaxes' `Indtaxes' `Contributions'
 	local transfers         `DirectTransfers' `Subsidies' `InKindTransfers'
 	
-	di "`Directaxes' /// `Contributions' /// `DirectTransfers' /// `Subsidies' /// `Indtaxes' /// `InKindTransfers'"
+	di "`Directaxes' /// `Contributions' /// `DirectTransfers' /// `Subsidies' /// `Indtaxes' /// `InKindTransfers' /// `extra_subdivisions'"
 
-*-------------------------------------
+ *-------------------------------------
 // Per cápita variables
 *-------------------------------------
 	
-	foreach var in `Directaxes' `Contributions' `DirectTransfers'  `Indtaxes' `Subsidies' `InKindTransfers' {
+	foreach var in `Directaxes' `Contributions' `DirectTransfers'  `Indtaxes' `Subsidies' `InKindTransfers' `extra_subdivisions' {
 		di "`var'"
 		cap gen `var' = 0   // temporal fix. This should be deleted in the final model.  - by Madi 
 		gen `var'_pc = `var'/hhsize
 	}
 	
-	foreach listvar in Directaxes Indtaxes InKindTransfers Contributions DirectTransfers Subsidies taxcs transfers {
+	foreach listvar in Directaxes Indtaxes InKindTransfers Contributions DirectTransfers Subsidies taxcs transfers extra_subdivisions {
 		local `listvar'_pc ""
 		foreach var of local `listvar' {
 			local `listvar'_pc "``listvar'_pc' `var'_pc"
@@ -259,14 +260,14 @@ gen education_inKind_pc = am_educ_1_pc + am_educ_2_pc + am_educ_3_pc + am_educ_4
 
 
 *------- Labels	Policy 
-foreach i in `Directaxes' `Contributions' `DirectTransfers'  `Indtaxes' `Subsidies' `InKindTransfers' {
+foreach i in `Directaxes' `Contributions' `DirectTransfers'  `Indtaxes' `Subsidies' `InKindTransfers' `extra_subdivisions'{
 	local var `i'
 	label var `var' "$`var'_lab"
 	label var `var'_pc "${`var'_lab} per capita"
 	
 }
 
-local policylist `Directaxes' dirtax_total `Contributions' sscontribs_total `DirectTransfers' dirtransf_total `Subsidies' subsidy_total `Indtaxes' indtax_total `InKindTransfers' inktransf_total
+local policylist `Directaxes' dirtax_total `Contributions' sscontribs_total `DirectTransfers' dirtransf_total `Subsidies' subsidy_total `Indtaxes' indtax_total `InKindTransfers' inktransf_total `extra_subdivisions'
 
 foreach var of local policylist {
 	local labelle : variable label `var'

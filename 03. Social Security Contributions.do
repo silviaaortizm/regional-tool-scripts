@@ -22,7 +22,7 @@ foreach var of varlist inclab_ssc*{
 }
 
 
-foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 {
+foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5 P2_6 {
 		if "${`group'_rate}"==""{
 			global `group'_rate "0"
 		}
@@ -55,9 +55,15 @@ forval regime=1/2{
 	replace ssc_health_`regime' = ${P2_`regime'_max_base}*${P2_`regime'_rate} if public_private==`regime' & inclab_ssc_health>=${P2_`regime'_max_base}
 }
 
+gen ssc_health_5 = 0
+gen ssc_health_6 = 0
+
+forval regime=5/6{
+	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_rate} 
+}
 
 
-collapse (sum) ssc_risk ssc_family ssc_health_1 ssc_health_2, by(hhid)
+collapse (sum) ssc_risk ssc_family ssc_health_1 ssc_health_2 ssc_health_5 ssc_health_6, by(hhid)
 
 if $devmode== 1 {
     save "$tempsim/social_security_contribs.dta", replace
