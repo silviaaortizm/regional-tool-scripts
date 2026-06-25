@@ -22,7 +22,7 @@ foreach var of varlist inclab_ssc*{
 }
 
 
-foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5 P2_6 P2_7 P2_8  P2_9_l1  P2_10_l1  P2_9_l2  P2_10_l2  P2_9_l3  P2_10_l3 {
+foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5_pub P2_6_pub P2_5_priv P2_6_priv P2_7 P2_8  P2_9_l1  P2_10_l1  P2_9_l2  P2_10_l2  P2_9_l3  P2_10_l3 {
 		if "${`group'_rate}"==""{
 			global `group'_rate "0"
 		}
@@ -34,6 +34,7 @@ foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5 P2_6 P2_7 P2_8  P2_
 gen ssc_risk = 0
 
 forval risks=1/3{
+	dis "${P2_4_l`risks'_rate}" "-" "${P2_4_l`risks'_max_base}"
 	replace ssc_risk = inclab_ssc_risk*${P2_4_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk<${P2_4_l`risks'_max_base}
 	replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_4_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}
 }
@@ -44,11 +45,11 @@ gen ssc_risk_10 = 0
 forval risks=1/3{
 	*employer
 	replace ssc_risk_9 = inclab_ssc_risk*${P2_9_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk<${P2_4_l`risks'_max_base}
-		replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_9_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}
+		replace ssc_risk_9 = ${P2_4_l`risks'_max_base}*${P2_9_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}
 		
 	*employee
 	replace ssc_risk_10 = inclab_ssc_risk*${P2_10_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk<${P2_4_l`risks'_max_base}
-		replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_10_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}	
+		replace ssc_risk_10 = ${P2_4_l`risks'_max_base}*${P2_10_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}	
 }
 
 
@@ -79,7 +80,10 @@ gen ssc_health_5 = 0
 gen ssc_health_6 = 0
 
 forval regime=5/6{
-	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_rate} 
+	*public
+	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_pub_rate} if public_private==1
+	*private
+	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_pub_rate} if public_private==2
 }
 
 
