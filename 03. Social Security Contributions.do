@@ -83,12 +83,22 @@ forval regime=1/2{
 gen ssc_health_5 = 0
 gen ssc_health_6 = 0
 
-forval regime=5/6{
+*employer
 	*public
-	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_pub_rate} if public_private==1
+	replace ssc_health_5 = inclab_ssc_health*${P2_5_pub_rate} if public_private==1 & inclab_ssc_health<${P2_1_max_base}
+	replace ssc_health_5 = ${P2_1_max_base}*${P2_5_pub_rate} if public_private==1 & inclab_ssc_health>=${P2_1_max_base}
 	*private
-	replace ssc_health_`regime' = inclab_ssc_health*${P2_`regime'_pub_rate} if public_private==2
-}
+	replace ssc_health_5 = inclab_ssc_health*${P2_5_priv_rate} if public_private==2 & inclab_ssc_health<${P2_2_max_base}
+	replace ssc_health_5 = ${P2_2_max_base}*${P2_5_priv_rate} if public_private==2 & inclab_ssc_health>=${P2_2_max_base}
+	
+*employee
+	*public
+	replace ssc_health_6 = inclab_ssc_health*${P2_6_pub_rate} if public_private==1 & inclab_ssc_health<${P2_1_max_base}
+	replace ssc_health_6 = ${P2_1_max_base}*${P2_6_pub_rate} if public_private==1 & inclab_ssc_health>=${P2_1_max_base}
+	*private
+	replace ssc_health_6 = inclab_ssc_health*${P2_6_priv_rate} if public_private==2 & inclab_ssc_health<${P2_2_max_base}
+	replace ssc_health_6 = ${P2_2_max_base}*${P2_6_priv_rate} if public_private==2 & inclab_ssc_health>=${P2_2_max_base}
+
 
 
 collapse (sum) ssc_risk ssc_risk_9 ssc_risk_10 ssc_family ssc_family_7 ssc_family_8 ssc_health_1 ssc_health_2 ssc_health_5 ssc_health_6, by(hhid)
