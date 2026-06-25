@@ -62,10 +62,14 @@ replace ssc_family = ${P2_3_max_base}*${P2_3_rate} if inclab_ssc_family>=${P2_3_
 
 gen ssc_family_7 = 0
 gen ssc_family_8 = 0
-
-forval regime=7/8{
-	replace ssc_family_`regime' = inclab_ssc_family*${P2_`regime'_rate} 
-}
+	
+	*Employer
+	replace ssc_family_7 = inclab_ssc_family*${P2_7_rate} if inclab_ssc_family<${P2_3_max_base}
+	replace ssc_family_7 = ${P2_3_max_base}*${P2_7_rate} if inclab_ssc_family>=${P2_3_max_base}
+	
+	*Employee
+	replace ssc_family_8 = inclab_ssc_family*${P2_8_rate} if inclab_ssc_family<${P2_3_max_base}
+	replace ssc_family_8 = ${P2_3_max_base}*${P2_8_rate} if inclab_ssc_family>=${P2_3_max_base}
 
 
 gen ssc_health_1 = 0
