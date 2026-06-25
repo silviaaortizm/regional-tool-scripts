@@ -22,7 +22,7 @@ foreach var of varlist inclab_ssc*{
 }
 
 
-foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5 P2_6 {
+foreach group in P2_1 P2_2 P2_3 P2_4_l1 P2_4_l2 P2_4_l3 P2_5 P2_6 P2_7 P2_8  P2_9_l1  P2_10_l1  P2_9_l2  P2_10_l2  P2_9_l3  P2_10_l3 {
 		if "${`group'_rate}"==""{
 			global `group'_rate "0"
 		}
@@ -38,6 +38,19 @@ forval risks=1/3{
 	replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_4_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}
 }
 
+gen ssc_risk_9 = 0
+gen ssc_risk_10 = 0
+
+forval risks=1/3{
+	*employer
+	replace ssc_risk_9 = inclab_ssc_risk*${P2_9_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk<${P2_4_l`risks'_max_base}
+		replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_9_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}
+		
+	*employee
+	replace ssc_risk_10 = inclab_ssc_risk*${P2_10_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk<${P2_4_l`risks'_max_base}
+		replace ssc_risk = ${P2_4_l`risks'_max_base}*${P2_10_l`risks'_rate} if risk_level==`risks' & inclab_ssc_risk>=${P2_4_l`risks'_max_base}	
+}
+
 
 
 gen ssc_family = 0
@@ -45,6 +58,13 @@ gen ssc_family = 0
 replace ssc_family = inclab_ssc_family*${P2_3_rate} if inclab_ssc_family<${P2_3_max_base}
 replace ssc_family = ${P2_3_max_base}*${P2_3_rate} if inclab_ssc_family>=${P2_3_max_base}
 
+
+gen ssc_family_7 = 0
+gen ssc_family_8 = 0
+
+forval regime=7/8{
+	replace ssc_family_`regime' = inclab_ssc_family*${P2_`regime'_rate} 
+}
 
 
 gen ssc_health_1 = 0
@@ -63,7 +83,7 @@ forval regime=5/6{
 }
 
 
-collapse (sum) ssc_risk ssc_family ssc_health_1 ssc_health_2 ssc_health_5 ssc_health_6, by(hhid)
+collapse (sum) ssc_risk ssc_risk_9 ssc_risk_10 ssc_family ssc_family_7 ssc_family_8 ssc_health_1 ssc_health_2 ssc_health_5 ssc_health_6, by(hhid)
 
 if $devmode== 1 {
     save "$tempsim/social_security_contribs.dta", replace

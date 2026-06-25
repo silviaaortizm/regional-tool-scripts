@@ -78,7 +78,7 @@ else {
 	local Subsidies         "${Subsidies}"
 	local Indtaxes 			"${Indtaxes}"
 	local InKindTransfers	"${InKindTransfers}" 
-	local extra_subdivisions "ssc_health_5 ssc_health_6"
+	local extra_subdivisions "ssc_health_5 ssc_health_6 ssc_risk_9 ssc_risk_10 ssc_family_7 ssc_family_8"
 		
 	local taxcs 			`Directaxes' `Indtaxes' `Contributions'
 	local transfers         `DirectTransfers' `Subsidies' `InKindTransfers'

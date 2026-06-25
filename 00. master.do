@@ -33,7 +33,7 @@ if "`c(username)'"=="wb419055" {
 
 if "`c(username)'"=="Silvia" {
 	global path     	"C:\Users\Silvia\OneDrive\World Bank\Projects\RegionalTool"	
-	global country		"SEN"
+	global country		"GNQ"
 }
 
 	*version 18
